@@ -1,4 +1,4 @@
-# Coding kata base repository
+# Coding kata base repository [![Build Status](https://travis-ci.org/TDDITS/kata-base.png?branch=master)](https://travis-ci.org/TDDITS/kata-base)
 
 Base template for kata repositories.
 
