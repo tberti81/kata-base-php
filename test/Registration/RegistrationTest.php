@@ -8,9 +8,8 @@
 
 namespace Kata\Test\Registration;
 
+use Kata\Registration\Email;
 use Kata\Registration\Registration;
-
-// TODO: test email is unique
 
 class RegistrationTest extends \PHPUnit_Framework_TestCase
 {
@@ -28,8 +27,17 @@ class RegistrationTest extends \PHPUnit_Framework_TestCase
 			->setConstructorArgs(array($email, $password))
 			->getMock();
 
+		$user->expects($this->any())
+			->method('getEmail')
+			->will($this->returnValue($email));
+
 		$userDao = $this->getMockBuilder('\\Kata\\Registration\\UserDao')
 			->getMock();
+
+		$userDao->expects($this->once())
+			->method('checkIsEmailExists')
+			->with($email)
+			->will($this->returnValue(false));
 
 		$userDao->expects($this->once())
 			->method('save')
@@ -38,5 +46,32 @@ class RegistrationTest extends \PHPUnit_Framework_TestCase
 
 		$registration = new Registration($user, $userDao);
 		$this->assertTrue($registration->register());
+	}
+
+	/**
+	 * @expectedException \Kata\Registration\Exception\NonUniqueEmailException
+	 */
+	public function testEmailIsUnique()
+	{
+		$email = new Email('sdas@dsf.hf');
+
+		$user = $this->getMockBuilder('\\Kata\\Registration\\User')
+			->disableOriginalConstructor()
+			->getMock();
+
+		$user->expects($this->any())
+			->method('getEmail')
+			->will($this->returnValue($email));
+
+		$userDao = $this->getMockBuilder('\\Kata\\Registration\\UserDao')
+			->getMock();
+
+		$userDao->expects($this->once())
+			->method('checkIsEmailExists')
+			->with($email)
+			->will($this->returnValue(true));
+
+		$registration = new Registration($user, $userDao);
+		$registration->register();
 	}
 }

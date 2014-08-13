@@ -8,6 +8,8 @@
 
 namespace Kata\Registration;
 
+use Kata\Registration\Exception\NonUniqueEmailException;
+
 class Registration
 {
 	/**
@@ -28,6 +30,10 @@ class Registration
 
 	public function register()
 	{
+		if ($this->userDao->checkIsEmailExists($this->user->getEmail())) {
+			throw new NonUniqueEmailException;
+		}
+
 		return $this->userDao->save($this->user);
 	}
 }
