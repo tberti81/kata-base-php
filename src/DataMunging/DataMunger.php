@@ -3,7 +3,7 @@
 namespace Kata\DataMunging;
 
 /**
- * @package Tdd\DataMunging
+ * @package Kata\DataMunging
  */
 class DataMunger
 {
